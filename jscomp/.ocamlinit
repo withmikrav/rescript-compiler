@@ -1,8 +1,9 @@
-#use "topfind";;
-#require "compiler-libs.common";;
-#load "bs_hash.cma";;
-#load "ext.cma";;
-#directory "./ext";;
+(* #use "topfind";; *)
+#directory "+compiler-libs";;
+#load "ocamlcommon.cma";;
+(* #load "bs_hash.cma";;
+#load "ext.cma";; *)
+(* #directory "./ext";;
 #directory "./stubs";;
 #directory "./bsb";;
 
@@ -21,4 +22,4 @@ let () =
     );
     bench (fun _ -> 
         Bs_hash_stubs.string_length_based_compare a   "yyy" 
-    )
+    ) *)
