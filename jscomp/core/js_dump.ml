@@ -870,7 +870,34 @@ and expression_desc cxt ~(level:int) f x : cxt  =
       | _ -> assert false
     end       
   | Caml_block(el,_, _, (Blk_extension | Blk_record_ext _ as ext )) ->             
-    expression_desc cxt ~level f (exn_block_as_obj ~stack:false el ext)      
+    expression_desc cxt ~level f (exn_block_as_obj ~stack:false el ext)
+  | Caml_block(el,_,tag, (Blk_record_inlined p)) -> 
+    if p.num_nonconst = 1 then 
+      expression_desc cxt ~level f (Object (
+         List.combine (Array.to_list p.fields) el
+      ))
+    else         
+      expression_desc cxt ~level f (Object (
+        ("tag",tag) ::  List.combine (Array.to_list p.fields) el
+      ))
+  | Caml_block(el,_,tag, (Blk_constructor p)) -> 
+    if p.num_nonconst = 1 then 
+      expression_desc cxt ~level f (Object (
+        Ext_list.mapi_append el (fun i e -> "_" ^ string_of_int i , e )
+          (if !Js_config.debug then 
+             ["name", E.str p.name]
+           else []
+          )
+        ))
+    else         
+      expression_desc cxt ~level f (Object (
+          ("tag",tag) :: 
+          Ext_list.mapi_append el (fun i e -> "_" ^ string_of_int i , e )
+          (if !Js_config.debug  then 
+            ["name", E.str p.name]
+            else []
+          )
+        ))    
   | Caml_block( el, mutable_flag, tag, tag_info)
     ->
     (* Note that, if we ignore more than tag [0] we loose some information

@@ -284,13 +284,15 @@ let dummy_obj ?comment (info : Lam_tag_info.t)  : t =
   match info with
   | Blk_record _ 
   | Blk_module _ 
+  | Blk_constructor _ 
+  | Blk_record_inlined _ 
     -> 
     {comment ; expression_desc = Object ([])}
-  | Blk_constructor _ 
+  
   | Blk_tuple | Blk_array
   | Blk_poly_var _ | Blk_extension_slot 
   | Blk_extension | Blk_na _ 
-  | Blk_record_inlined _ 
+  
   | Blk_record_ext _ 
   | Blk_class | Blk_module_export 
     ->
@@ -400,6 +402,9 @@ let record_access (e : t) (name : string) (pos : int32) =
       { expression_desc = Static_index (e, name, Some pos); comment = None}     
     )
   | _ -> { expression_desc = Static_index (e, name, Some pos); comment = None} 
+
+(* The same as {!record_access} except tag*)
+let inline_record_access = record_access
 
 let poly_var_tag_access (e : t)  = 
   match e.expression_desc with

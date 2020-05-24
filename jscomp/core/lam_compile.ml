@@ -385,6 +385,8 @@ and compile_recursive_let ~all_bindings
              (Js_of_lam_block.set_field 
               (match tag_info with 
               | Blk_record xs -> Fld_record_set xs.(i)
+              | Blk_record_inlined xs -> Fld_record_inline_set xs.fields.(i)
+              | Blk_constructor _ -> Fld_record_inline_set ("_" ^ string_of_int i)
               | _ -> Fld_set_na) (E.var id)  (Int32.of_int i)                    
                 (match x with 
                  | Lvar lid  -> E.var lid

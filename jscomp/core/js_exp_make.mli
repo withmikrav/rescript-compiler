@@ -188,6 +188,13 @@ val record_access :
   Int32.t -> 
   t 
 
+val inline_record_access :   
+  t ->
+  string -> 
+  Int32.t -> 
+  t 
+
+
 val extension_access : 
   t ->
   string option -> 
@@ -374,3 +381,4 @@ val resolve_and_apply :
   string ->
   t list ->
   t
+
