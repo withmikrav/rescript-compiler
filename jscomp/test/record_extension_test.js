@@ -40,7 +40,7 @@ function f2(x) {
   if (typeof x === "number" || x.tag) {
     return 0;
   } else {
-    return x[/* x */0];
+    return x.x;
   }
 }
 
@@ -48,10 +48,11 @@ function f2_with(x) {
   if (typeof x === "number" || x.tag) {
     return x;
   } else {
-    return /* C */Block.__(0, [
-              /* x */0,
-              /* y */x[/* y */1]
-            ]);
+    return /* C */{
+            tag: 0,
+            x: /* x */0,
+            y: /* y */x.y
+          };
   }
 }
 
