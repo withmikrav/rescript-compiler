@@ -21,6 +21,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *)
+let ( ) = 
+  let lock =  ".bsb.exe.lock" in 
+  let _handler = 
+    (fun _ -> try Unix.unlink lock with _ -> ()) in   
+  
+  match Unix.openfile lock [O_CREAT; O_EXCL] 0o666  with 
+  | exception  _ -> 
+    prerr_endline ("It seems the build is already running\n\
+    If you are sure nothing is running, please remove " ^ lock);
+    exit 3
+  | fd -> 
+     Unix.close fd; 
+    Ext_list.iter 
+    Sys.[
+      sigint;   
+      (*sigkill;
+      
+      sigterm;
+      sigusr1;
+      sigusr2 *)
+    ] (fun s -> Sys.set_signal s (Signal_handle (fun _ -> _handler ()))); 
+
+    at_exit _handler; ()
 
 let () =  Bsb_log.setup () 
 let current_theme = ref "basic"
